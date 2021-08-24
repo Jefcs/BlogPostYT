@@ -3,7 +3,7 @@
     <div class="app">
       <Navigation v-if="!navigation" />
       <router-view />
-      <Footer />
+      <Footer v-if="!navigation" />
     </div>
   </div>
 </template>
