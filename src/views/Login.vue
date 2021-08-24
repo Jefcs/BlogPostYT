@@ -31,6 +31,8 @@
 <script>
 import email from '../assets/Icons/envelope-regular.svg';
 import password from '../assets/Icons/lock-alt-solid.svg';
+import firebase from 'firebase/app';
+import 'firebase/auth';
 export default {
   name: 'Login',
   components: {
@@ -40,7 +42,9 @@ export default {
   data() {
     return {
       email: null,
-      password: null
+      password: null,
+      error: null,
+      errorMsg:
     };
   }
 };
