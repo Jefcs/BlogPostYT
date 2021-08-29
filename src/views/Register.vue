@@ -83,7 +83,7 @@ export default {
         const result = await createUser;
         const dataBase = db.collection('users').doc(result.user.uid);
         await dataBase.set({
-          firtName: this.firstName,
+          firstName: this.firstName,
           lastName: this.lastName,
           userName: this.userName,
           email: this.email
