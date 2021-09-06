@@ -1,6 +1,7 @@
 <template>
   <div class="create-post">
     <BlogCoverPreview v-show="this.$store.state.blogPhotoPreview" />
+    <Loading v-show="loading" />
     <div class="container">
       <div :class="{ invisible: !error }" class="err-message">
         <p><span>Error:</span>{{ this.errorMsg }}</p>
@@ -50,13 +51,16 @@ import 'firebase/storage';
 import db from '../firebase/firebaseInit';
 
 import BlogCoverPreview from '../components/BlogCoverPreview.vue';
+import Loading from '../components/Loading.vue';
+
 import Quill from 'quill';
 window.Quill = Quill;
 const ImageResize = require('quill-image-resize-module').default;
 Quill.register('modules/imageResize', ImageResize);
 export default {
   components: {
-    BlogCoverPreview
+    BlogCoverPreview,
+    Loading
   },
   name: 'CreatePost',
   data() {
@@ -64,6 +68,7 @@ export default {
       file: null,
       error: null,
       errorMsg: null,
+      loading: null,
       editorSettings: {
         modules: {
           imageResize: {}
@@ -102,6 +107,7 @@ export default {
     uploadBlog() {
       if (this.blogTitle.length !== 0 && this.blogHTML.length !== 0) {
         if (this.file) {
+          this.loading = true;
           const storageRef = firebase.storage().ref();
           const docRef = storageRef.child(
             `documents/BlogCoverPhotos/${this.$store.state.blogPhotoName}`
@@ -114,6 +120,7 @@ export default {
             err => {
               //
               console.log(err);
+              this.loading = false;
             },
             async () => {
               const downloadURL = await docRef.getDownloadURL();
@@ -129,7 +136,12 @@ export default {
                 profileId: this.profileId,
                 date: timestamp
               });
-              this.$router.push({ name: 'ViewBlog' });
+              await this.$store.dispatch('getPost');
+              this.loading = false;
+              this.$router.push({
+                name: 'ViewBlog',
+                params: { blogid: dataBase.id }
+              });
             }
           );
           return;
@@ -154,8 +166,7 @@ export default {
       return this.$store.state.profileId;
     },
     blogCoverPhotoName() {
-      console.log(this.$store.state.blogCoverPhotoName, 'blogCoverPhotoName');
-      return this.$store.state.blogCoverPhotoName;
+      return this.$store.state.blogPhotoName;
     },
     blogTitle: {
       get() {
