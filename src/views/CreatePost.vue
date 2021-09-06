@@ -129,6 +129,7 @@ export default {
                 profileId: this.profileId,
                 date: timestamp
               });
+              this.$router.push({ name: 'ViewBlog' });
             }
           );
           return;
@@ -153,6 +154,7 @@ export default {
       return this.$store.state.profileId;
     },
     blogCoverPhotoName() {
+      console.log(this.$store.state.blogCoverPhotoName, 'blogCoverPhotoName');
       return this.$store.state.blogCoverPhotoName;
     },
     blogTitle: {
