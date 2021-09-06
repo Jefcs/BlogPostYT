@@ -142,11 +142,7 @@ router.beforeEach(async (to, from, next) => {
   }
   if (to.matched.some(res => res.meta.requiresAuth)) {
     if (user) {
-      if (
-        to.matched.some(res => {
-          res.meta.requiresAdmin;
-        })
-      ) {
+      if (to.matched.some(res => res.meta.requiresAdmin)) {
         if (admin) {
           return next();
         }
